@@ -6,6 +6,7 @@ import { TouchableOpacity, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 
+
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
   initialRouteName: 'index',
@@ -27,7 +28,7 @@ export default function RootLayoutNav() {
           }} />
 
 
-          <Stack.Screen 
+        <Stack.Screen
           name='(modal)/filter'
           options={{
             presentation: 'modal',
@@ -38,15 +39,34 @@ export default function RootLayoutNav() {
             },
             headerLeft: () => {
               return (
-              <TouchableOpacity onPress={() =>{Navigation.goBack()}}>
-                <Ionicons name='close-outline' size={26} color={Colors.primary}></Ionicons>
-              </TouchableOpacity>
+                <TouchableOpacity onPress={() => { Navigation.goBack() }}>
+                  <Ionicons name='close-outline' size={26} color={Colors.primary}></Ionicons>
+                </TouchableOpacity>
               );
             }
-          }}/>
+          }} />
+
+        <Stack.Screen
+          name='(modal)/locationSearch'
+          options={{
+            presentation: 'fullScreenModal',
+            headerTitle: 'Select Loation',
+            headerStyle: {
+              backgroundColor: Colors.lightGrey,
+            },
+            headerLeft: () => {
+              return (
+                <TouchableOpacity onPress={() => { Navigation.goBack() }}>
+                  <Ionicons name='close-outline' size={26} color={Colors.primary}></Ionicons>
+                </TouchableOpacity>
+              );
+            }
+          }} />
 
 
-          
+
+
+
       </Stack>
     </BottomSheetModalProvider>
   );

@@ -35,6 +35,9 @@
     "experiments": {
       "typedRoutes": true,
       "tsconfigPaths": true
+    },
+    "extra": {
+      "EXPO_PUBLIC_GOOGLE_API_KEY": "AIzaSyBiKpAm81DwnDjRlPZ6Aqc4P2uCP0jkKh0"
     }
   }
 }
