@@ -1,16 +1,22 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import MapView from 'react-native-maps'
 import Colors from '@/constants/Colors'
 import { useNavigation } from 'expo-router'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import Constants from 'expo-constants';
-
 
 //google API key
 // process.env.EXPO_PUBLIC_GOOGLE_API_KEY
 
 const locationSearch = () => {
+
+
+
+    useEffect(() => {
+        console.log(process.env.EXPO_PUBLIC_GOOGLE_API_KEY);
+    }, [])
+
+    
     const navigation = useNavigation();
     const [location, setlocation] = useState({
         latitude: 29.897285,
@@ -28,7 +34,7 @@ const locationSearch = () => {
                     console.log(data, details)
             }} 
             query={{
-                key: Constants.manifest.extra.googleApiKey,
+                key: process.env.EXPO_PUBLIC_GOOGLE_API_KEY,
                 language:'en',
             }}
 
