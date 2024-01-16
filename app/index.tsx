@@ -18,13 +18,6 @@ const PageLayout = () => {
           Offers Near You
         </Text>
         <Restaurants />
-        
-
-
-
-
-
-
       </ScrollView>
     </SafeAreaView>
   )
@@ -34,12 +27,12 @@ const styles = StyleSheet.create({
   container:{
     top: 30,
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: Colors.lightGrey,
   },
   headder: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginBottom: 16,
     paddingHorizontal: 16,
     
 
