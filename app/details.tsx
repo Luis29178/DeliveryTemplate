@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Image, SectionList, ListRenderItem, ScrollView } from 'react-native'
-import React, { useLayoutEffect, useState } from 'react'
+import React, { useLayoutEffect, useRef, useState } from 'react'
 import ParallaxScrollView from '@/components/ParallaxScrollView'
 import Colors from '@/constants/Colors';
 import { restaurant } from '@/assets/data/restaurant'
@@ -37,6 +37,8 @@ function details() {
             : stickySegmentOpacity.value = 0
 
     };
+    const scrollRef = useRef<ScrollView>(null);
+    const itemsRef = useRef<View[]>([]);
     useLayoutEffect(() => {
         navigation.setOptions({
             headerTransparent: true,
@@ -71,7 +73,11 @@ function details() {
     }, []);
 
     const selectCategory = (index: number) => {
+        const selected = itemsRef.current[index];
         setActiveIndex(index);
+        selected.measure((x) => {
+            scrollRef.current?.scrollTo({ x: x - 16 })
+        })
     }
 
     const renderSectionItem: ListRenderItem<any> = ({ item, index }) => (
@@ -139,12 +145,22 @@ function details() {
 
             <Animated.View style={[styles.stickySegment, animatedStyles]}>
                 <View style={styles.segmentsShadow}>
-                    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ padding: 16 }} >
+                    <ScrollView
+                        ref={scrollRef}
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={{ padding: 16 }} >
                         {restaurant.food.map((food, index) => {
                             return (
-                                <TouchableOpacity onPress={() => { setActiveIndex(index) }} key={index} style={activeIndex === index ? styles.segmentButtonActive : styles.segmentButton}>
-                                    <Text style={activeIndex === index ? styles.segmentTextActive : styles.segmentText}>{`${food.category}`}</Text>
-                                </TouchableOpacity>
+                                <View
+                                    ref={ref => itemsRef.current[index] = ref!}
+                                    >
+                                    <TouchableOpacity
+
+                                        onPress={() => { setActiveIndex(index) }} key={index} style={activeIndex === index ? styles.segmentButtonActive : styles.segmentButton}>
+                                        <Text style={activeIndex === index ? styles.segmentTextActive : styles.segmentText}>{`${food.category}`}</Text>
+                                    </TouchableOpacity>
+                                </View>
                             )
                         })}
                     </ScrollView>
