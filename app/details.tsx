@@ -81,7 +81,7 @@ function details() {
     }
 
     const renderSectionItem: ListRenderItem<any> = ({ item, index }) => (
-        <Link href={"./"} asChild>
+        <Link href={{pathname:"./dish", params:{id: item.id} }} asChild>
             <TouchableOpacity style={styles.sectionItem}>
                 <View style={styles.sectionItemInfo}>
                     <Text style={styles.itemName}>{item.name}</Text>
