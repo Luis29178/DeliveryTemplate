@@ -5,11 +5,15 @@ import { getDishById } from '@/assets/data/restaurant';
 import Colors from '@/constants/Colors';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Animated, { FadeIn, FadeInDown, FadeInLeft, FadeInUp } from 'react-native-reanimated';
 
 const dish = () => {
 
+
+    
     const { id } = useLocalSearchParams();
     const item = getDishById(+id);
+    
 
     const addToCart = () => {
 
@@ -19,10 +23,13 @@ const dish = () => {
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }} edges={['bottom']}>
             <View style={styles.container}>
-                <Image source={item?.img} style={styles.dishImg} />
+                <Animated.Image
+                entering={FadeIn.duration(750)}
+                source={item?.img} 
+                style={styles.dishImg} />
                 <View style={styles.content}>
-                    <Text style={styles.dishTitle}>{item?.name}</Text>
-                    <Text style={styles.dishDescription}>{item?.info}</Text>
+                    <Animated.Text entering={FadeInUp.duration(750).delay(200)} style={styles.dishTitle}>{item?.name}</Animated.Text>
+                    <Animated.Text entering={FadeInDown.duration(750).delay(750)} style={styles.dishDescription}>{item?.info}</Animated.Text>
 
 
                 </View>
@@ -64,7 +71,7 @@ const styles = StyleSheet.create({
     },
 
     footer: {
-        backgroundColor: 'white',
+        backgroundColor: Colors.lightGrey,
         position: 'absolute',
         bottom: 0,
         paddingHorizontal: 60,
