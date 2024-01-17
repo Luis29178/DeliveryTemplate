@@ -1,11 +1,12 @@
-import { StyleSheet, Text, View, Image, SectionList, ListRenderItem } from 'react-native'
-import React, { useLayoutEffect } from 'react'
+import { StyleSheet, Text, View, Image, SectionList, ListRenderItem, ScrollView } from 'react-native'
+import React, { useLayoutEffect, useState } from 'react'
 import ParallaxScrollView from '@/components/ParallaxScrollView'
 import Colors from '@/constants/Colors';
 import { restaurant } from '@/assets/data/restaurant'
 import { Link, useNavigation } from 'expo-router';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 
 
@@ -20,6 +21,22 @@ function details() {
         }
     })
     const navigation = useNavigation()
+    const [activeIndex, setActiveIndex] = useState(0);
+
+    const stickySegmentOpacity = useSharedValue(0);
+    const animatedStyles = useAnimatedStyle(() => ({
+        opacity: stickySegmentOpacity.value
+
+    }))
+    const onScroll = (event: any) => {
+        const y = event.nativeEvent.contentOffset.y;
+
+
+        y > 150
+            ? stickySegmentOpacity.value = withTiming(1)
+            : stickySegmentOpacity.value = 0
+
+    };
     useLayoutEffect(() => {
         navigation.setOptions({
             headerTransparent: true,
@@ -53,14 +70,18 @@ function details() {
 
     }, []);
 
+    const selectCategory = (index: number) => {
+        setActiveIndex(index);
+    }
+
     const renderSectionItem: ListRenderItem<any> = ({ item, index }) => (
         <Link href={"./"} asChild>
             <TouchableOpacity style={styles.sectionItem}>
-                <View  style={styles.sectionItemInfo}>
-                <Text style={styles.itemName}>{item.name}</Text>
-                <Text style={styles.itemInfo}>{item.info}</Text>
-                <Text style={styles.itemPrice}>{`$${item.price}`}</Text>
-                
+                <View style={styles.sectionItemInfo}>
+                    <Text style={styles.itemName}>{item.name}</Text>
+                    <Text style={styles.itemInfo}>{item.info}</Text>
+                    <Text style={styles.itemPrice}>{`$${item.price}`}</Text>
+
                 </View>
                 <Image source={item.img} style={styles.sectionItemImage}></Image>
 
@@ -75,6 +96,7 @@ function details() {
     return (
         <>
             <ParallaxScrollView
+                onScroll={onScroll}
                 contentContainerStyle={{ paddingBottom: 50 }}
                 contentBackgroundColor={Colors.lightGrey}
                 backgroundColor={'white'}
@@ -114,11 +136,90 @@ function details() {
 
                 </View>
             </ParallaxScrollView>
+
+            <Animated.View style={[styles.stickySegment, animatedStyles]}>
+                <View style={styles.segmentsShadow}>
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ padding: 16 }} >
+                        {restaurant.food.map((food, index) => {
+                            return (
+                                <TouchableOpacity onPress={() => { setActiveIndex(index) }} key={index} style={activeIndex === index ? styles.segmentButtonActive : styles.segmentButton}>
+                                    <Text style={activeIndex === index ? styles.segmentTextActive : styles.segmentText}>{`${food.category}`}</Text>
+                                </TouchableOpacity>
+                            )
+                        })}
+                    </ScrollView>
+
+                </View>
+            </Animated.View>
         </>
     )
 }
 
 const styles = StyleSheet.create({
+    stickySegment: {
+        position: 'absolute',
+        height: 50,
+        left: 0,
+        right: 0,
+        top: 100,
+        backgroundColor: 'white',
+        justifyContent: 'center',
+        overflow: 'hidden',
+
+    },
+    segmentsShadow: {
+        justifyContent: 'center',
+        shadowColor: '#000000',
+        shadowOffset: {
+            height: 4,
+            width: 0,
+
+        },
+        shadowOpacity: 0.125,
+        elevation: 5,
+        shadowRadius: 4,
+
+
+    },
+    segmentButton: {
+        top: -5,
+        height: 30,
+        backgroundColor: 'white',
+        paddingHorizontal: 16,
+        paddingVertical: 4,
+        borderRadius: 90001,
+        justifyContent: 'center',
+        marginRight: 16,
+
+    },
+    segmentButtonActive: {
+        top: -5,
+        height: 30,
+        backgroundColor: Colors.primary,
+        paddingHorizontal: 16,
+        paddingVertical: 4,
+        borderRadius: 90001,
+        justifyContent: 'center',
+        marginRight: 16,
+
+    },
+    segmentText: {
+        color: Colors.primary,
+        fontWeight: 'bold',
+        fontSize: 16,
+
+
+    },
+    segmentTextActive: {
+        color: "white",
+        fontWeight: 'bold',
+        fontSize: 16,
+
+
+    },
+
+
+
     parallax: {
         flex: 1,
     },
@@ -196,9 +297,9 @@ const styles = StyleSheet.create({
     },
     sectionItemInfo: {
         flex: 1,
-        
+
     },
-    sectionItemImage:{
+    sectionItemImage: {
         height: 80,
         width: 80,
         borderRadius: 4,
