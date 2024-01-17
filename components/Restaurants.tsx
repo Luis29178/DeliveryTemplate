@@ -14,8 +14,8 @@ const Restaurants = () => {
       {restaurants.map((restaurant, index) => {
         return (
 
-          <Link href={"./details"} asChild>
-            <TouchableOpacity key={index} >
+          <Link href={"./details"} key={index} asChild>
+            <TouchableOpacity  >
               <View style={styles.restaurantCard} >
                 <Image style={styles.resImage} source={restaurant.img}/>
                 <View style={styles.subInfo}>
